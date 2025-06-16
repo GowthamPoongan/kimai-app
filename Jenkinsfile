@@ -6,19 +6,13 @@ pipeline {
     }
 
     stages {
-        stage('Clone Kimai Repo') {
-            steps {
-                git branch: 'main', url: 'https://github.com/GowthamPoongan/kimai-app.git'
-            }
-        }
-
         stage('Start Kimai with Docker Compose') {
             steps {
                 script {
                     sh '''
                         echo "[INFO] Stopping any previous containers..."
                         docker-compose down || true
-                        
+
                         echo "[INFO] Starting Kimai and MySQL containers..."
                         docker-compose up -d
                     '''
