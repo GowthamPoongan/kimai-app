@@ -11,6 +11,7 @@ services:
       - ADMINMAIL=admin@example.com
       - ADMINPASS=changeme
       - DATABASE_URL=mysql://kimai:kimai@mysql/kimai
+     restart: always
 
   mysql:
     image: mariadb
@@ -19,6 +20,7 @@ services:
       - MYSQL_USER=kimai
       - MYSQL_PASSWORD=kimai
       - MYSQL_ROOT_PASSWORD=root
+    restart: always
     volumes:
       - mysql:/var/lib/mysql
 
