@@ -1,43 +1,32 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = 'kimai'
-    }
-
     stages {
-        stage('Start Kimai with Docker Compose') {
+        stage('Clone Repo and Start Kimai') {
             steps {
-                script {
-                    sh '''
-                        echo "[INFO] Stopping any previous containers (if exist)..."
-                        docker-compose -f /home/ec2-user/kimai-app/docker-compose.yml down || true
+                sh '''
+                echo "[INFO] Cloning repo..."
+                git clone https://github.com/GowthamPoongan/kimai-app.git /tmp/kimai-app
 
-                        echo "[INFO] Starting Kimai and MySQL containers..."
-                        docker-compose -f /home/ec2-user/kimai-app/docker-compose.yml up -d
-                    '''
-                }
+                echo "[INFO] Starting Docker containers..."
+                docker compose -f /tmp/kimai-app/docker-compose.yml down || true
+                docker compose -f /tmp/kimai-app/docker-compose.yml up -d
+                '''
             }
         }
 
-        stage('Verify Containers') {
+        stage('Check Docker Containers') {
             steps {
                 sh 'docker ps'
             }
         }
 
-        stage('Display Kimai URL') {
+        stage('Show App URL') {
             steps {
                 script {
                     def ip = sh(script: "curl -s http://checkip.amazonaws.com", returnStdout: true).trim()
-                    echo "🌐 Access your Kimai app at: http://${ip}:8001"
+                    echo "🌐 Kimai App running at: http://${ip}:8001"
                 }
-            }
-        }
-
-        stage('Check Jenkins Memory') {
-            steps {
-                sh 'free -h'
             }
         }
     }
