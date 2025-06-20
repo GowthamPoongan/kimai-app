@@ -11,7 +11,7 @@ services:
       - ADMINMAIL=admin@example.com
       - ADMINPASS=changeme
       - DATABASE_URL=mysql://kimai:kimai@mysql/kimai
-     restart: always
+    restart: always
 
   mysql:
     image: mariadb
