@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        echo "[INFO] Stopping any previous containers (if exist)..."
+                        echo "[INFO] Cleaning previous containers..."
                         docker compose -f docker-compose.yml down || true
 
                         echo "[INFO] Starting Kimai..."
