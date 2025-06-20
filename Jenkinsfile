@@ -11,10 +11,10 @@ pipeline {
                 script {
                     sh '''
                         echo "[INFO] Stopping any previous containers (if exist)..."
-                        docker compose -f /home/ec2-user/kimai-app/docker-compose.yml down || true
+                        docker-compose -f /home/ec2-user/kimai-app/docker-compose.yml down || true
 
                         echo "[INFO] Starting Kimai and MySQL containers..."
-                        docker compose -f /home/ec2-user/kimai-app/docker-compose.yml up -d
+                        docker-compose -f /home/ec2-user/kimai-app/docker-compose.yml up -d
                     '''
                 }
             }
