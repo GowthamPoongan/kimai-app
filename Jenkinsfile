@@ -1,17 +1,22 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Clone Repo and Start Kimai') {
-            steps {
-                sh '''
-                echo "[INFO] Cloning repo..."
-                git clone https://github.com/GowthamPoongan/kimai-app.git /tmp/kimai-app
+    environment {
+        COMPOSE_PROJECT_NAME = 'kimai'
+    }
 
-                echo "[INFO] Starting Docker containers..."
-                docker compose -f /tmp/kimai-app/docker-compose.yml down || true
-                docker compose -f /tmp/kimai-app/docker-compose.yml up -d
-                '''
+    stages {
+        stage('Start Kimai with Docker Compose') {
+            steps {
+                script {
+                    sh '''
+                        echo "[INFO] Stopping any previous containers (if exist)..."
+                        docker compose -f docker-compose.yml down || true
+
+                        echo "[INFO] Starting Kimai..."
+                        docker compose -f docker-compose.yml up -d
+                    '''
+                }
             }
         }
 
@@ -25,7 +30,7 @@ pipeline {
             steps {
                 script {
                     def ip = sh(script: "curl -s http://checkip.amazonaws.com", returnStdout: true).trim()
-                    echo "🌐 Kimai App running at: http://${ip}:8001"
+                    echo "✅ Kimai running at: http://${ip}:8001"
                 }
             }
         }
